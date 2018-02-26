@@ -9,5 +9,6 @@ Zachary Lehmann
 
 Andrew Taylor
 
-Department of Emergency Medicine
+Department of Emergency Medicine,
+
 Yale University
