@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="Static/USApp/style.css" >
+    <meta charset="UTF-8">
+    <title>Generate AVI files from directories</title>
+</head>
+<body>
+    <h1>Create Video Files:</h1>
+    <div>
+        <ul id="navbar">
+            <li><a href="{% url 'welcome' %}">Home</a></li>
+            <li><a href="{% url 'chkdir' %}">Check Directories</a></li>
+            <li><a href="{% url 'avi' %}">Video</a></li>
+            <li><a href="{% url 'pickle' %}">Pickle</a></li>
+            <li><a href="{% url 'hdf5' %}">HDF5</a></li>
+        </ul>
+    </div>
+    <p>Videos will be in subdirectories of the "Videos" folder created by this script. We recommend using <a href="https://www.videolan.org/vlc/index.html">VLC</a>.</p>
+    <form action="avi" method="post">
+        {% csrf_token %}
+        <table>
+            <tr><th><h3>Core Features:</h3></th></tr>
+            <tr id="rowid_">
+                <th>DCM_Compressed:</th>
+                <td>{{ form.dcm_compressed }}</td>
+                <td>Check if input data files are compressed (see <a href="{% url 'chkdir' %}">Check Directories</a>).</td>
+            </tr>
+            <tr id="rowid_{{ form.anonymize.help_text }}">
+                <th>Anonymize:</th>
+                <td>{{ form.anonymize }}</td>
+                <td>Anonymization: remove fixed pixels (required for cropping).</td>
+            </tr>
+            <tr id="rowid_{{ form.image_thresholding.help_text }}">
+                <th>Image Thresholding:</th>
+                <td>{{ form.image_thresholding }}</td>
+                <td>Image thresholding: select either a binary threshold set with the "Cleaning threshold" variable or Otsu's method.</td>
+            </tr>
+            <tr id="rowid_{{ form.cleaning_threshold.help_text }}">
+                <th>Cleaning Threshold:</th>
+                <td>{{ form.cleaning_threshold }}</td>
+                <td>Cleaning threshold: higher values will result in more pixels removed. Required if "Image thresholding" is set to binary</td>
+            </tr>
+            <tr id="rowid_">
+                <th>Crop:</th>
+                <td>{{ form.crop }}</td>
+                <td>Crop: crop image to predicted ultrasound cone.</td>
+            </tr>
+            <tr id="rowid_{{ form.resize.help_text }}">
+                <th>Resize:</th>
+                <td>{{ form.resize }}</td>
+                <td>Resize: resize output clip to defined dimensions.</td>
+            </tr>
+            <tr id="rowid_{{ form.r_dim.help_text }}">
+                <th>R Dim:</th>
+                <td>{{ form.r_dim }}</td>
+                <td>R dim: if resize is selected, sets output height.</td>
+            </tr>
+            <tr id="rowid_{{ form.c_dim.help_text }}">
+                <th>C Dim:</th>
+                <td>{{ form.c_dim }}</td>
+                <td>C dim: if resize is selected, sets output width.</td>
+            </tr>
+            <tr id="rowid_">
+                <th>RGB:</th>
+                <td>{{ form.rgb }}</td>
+                <td>Maintain color images: select to output with original color scheme. Deselecting yields grayscale videos.</td>
+            </tr>
+            <tr id="rowid_">
+                <th>Output Type:</th>
+                <td>{{ form.output_type }}</td>
+                <td>Output type: select api or mpeg video formats.</td>
+            </tr>
+            <tr><th><h3>Advanced Features:</h3></th></tr>
+            <tr id="rowid_">
+                <th>Image Increment:</th>
+                <td>{{ form.image_increment }}</td>
+                <td>Image increment: assigns number of contiguous frames used to identify fixed pixels.</td>
+            </tr>
+            <tr id="rowid_">
+                <th>FPS:</th>
+                <td>{{ form.fps }}</td>
+                <td>FPS: frames per second of output video.</td>
+            </tr>
+            <tr id="rowid_">
+                <th>Gamma:</th>
+                <td>{{ form.gamma }}</td>
+                <td>Gamma: set exposure gamma for the video.</td>
+            </tr>
+            <tr id="rowid_">
+                <th>Verbose:</th>
+                <td>{{ form.verbose }}</td>
+                <td>Verbose: terminal output will show more information. Will not affect GUI experience.</td>
+            </tr>
+        </table>
+        <input type="submit" value="Submit" />
+    </form>
+    <script> <!--scripts to hide extra form fields based on user entries-->
+        function aviAnonymizeOptions(){
+            var check1 = document.getElementById("id_anonymize");
+            var field1 = document.getElementById("rowid_image_thresholding_tr");
+            var field2 = document.getElementById("rowid_cleaning_threshold_tr");
+            if (check1.checked == true){
+                field1.style.display = "table-row";
+                field2.style.display = "table-row";
+            } else {
+                field1.style.display = "none";
+                field2.style.display = "none";
+            }
+        }
+
+        function aviResizeOptions(){
+            var check1 = document.getElementById("id_resize");
+            var field1 = document.getElementById("rowid_r_dim_tr");
+            var field2 = document.getElementById("rowid_c_dim_tr");
+            if (check1.checked == true){
+                field1.style.display = "table-row";
+                field2.style.display = "table-row";
+            } else {
+                field1.style.display = "none";
+                field2.style.display = "none";
+            }
+        }
+    </script>
+    <div>
+        {% for line in process %}
+            {{  line  }}</br>
+        {% endfor %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="Static/USApp/style.css" >
+    <meta charset="UTF-8">
+    <title>Ultrasound Pro</title>
+</head>
+<body>
+
+    <h1>Ultrasound Pro Tool</h1>
+    <p></p>
+    <h2>Welcome to the Ultrasound Pro Tool.</h2>
+    <p>We recommend beginning with the Check directories tool below to ensure that the data-containing directories have been correctly mounted.</p>
+    </br>
+    <h2>Select a Process Below:</h2>
+    <ol>
+        <li><a href="{% url 'chkdir' %}">Check directories - run first</li>
+        <li><a href="{% url 'avi' %}">Create Video Files</li>
+        <li><a href="{% url 'pickle' %}">Create Pickle File</li>
+        <li><a href="{% url 'hdf5' %}">Create HDF5 File</a></li>
+    </ol>
+</body>
+</html>

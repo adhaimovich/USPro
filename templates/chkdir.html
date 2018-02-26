@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="Static/USApp/style.css" >
+    <meta charset="UTF-8">
+    <title>Check Directory</title>
+</head>
+<body>
+    <h1>Check the data directories:</h1>
+    <div>
+        <ul id="navbar">
+            <li><a href="{% url 'welcome' %}">Home</a></li>
+            <li><a href="{% url 'chkdir' %}">Check Directories</a></li>
+            <li><a href="{% url 'avi' %}">Video</a></li>
+            <li><a href="{% url 'pickle' %}">Pickle</a></li>
+            <li><a href="{% url 'hdf5' %}">HDF5</a></li>
+        </ul>
+    </div>
+    <p>Use this tool to 1) check that the directory containing your data was correctly mounted and 2) check the compression status of the DICOM files</p>
+    <form action="chkdir" method="post">
+        {% csrf_token %}
+        <!--{{ form.as_table }}-->
+        <input type="submit" value="Check Directories" />
+    </form>
+    <div>
+        {% for line in process %}
+            {{  line  }}</br>
+        {% endfor %}
+    </div>
+</body>
+</html>

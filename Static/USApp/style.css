@@ -1,0 +1,71 @@
+h1 {
+    background-color: #00356b;
+    height: 100px;
+    padding: 20px;
+    margin-bottom: 0px;
+    color: white;
+    font-family: "Arial";
+}
+
+p {
+    font-family: "Arial";
+}
+
+h2 {
+    color: #00356b;
+    font-family: "Arial";
+}
+
+h3 {
+    color: #00356b;
+    font-family: "Arial";
+    font-weight: bold;
+}
+
+tr {
+    width: 600px;
+    font-family: "Arial";
+}
+
+th {
+    position: static;
+    right: 0px;
+    width: 200px;
+    text-align: left;
+    font-family: "Arial";
+    color: #00356b;
+    font-weight: normal;
+}
+
+td {
+    padding-left: 20px;
+}
+
+#navbar {
+    font-family: "Arial";
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #00356b;
+}
+
+ul li {
+    float: left;
+}
+
+ul li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+ul li a:hover {
+    background-color: steelblue;
+}
+
+#rowid_core_features {
+
+}
