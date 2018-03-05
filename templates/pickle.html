@@ -22,26 +22,11 @@
         <table>
             <tr><th><h3>Core Features:</h3></th></tr>
             <tr id="rowid_">
-                <th>DCM_Compressed:</th>
-                <td>{{ form.dcm_compressed }}</td>
-                <td>Check if input data files are compressed (see <a href="{% url 'chkdir' %}">Check Directories</a>).</td>
-            </tr>
-            <tr id="rowid_{{ form.anonymize.help_text }}">
                 <th>Anonymize:</th>
                 <td>{{ form.anonymize }}</td>
                 <td>Anonymization: remove fixed pixels (required for cropping).</td>
             </tr>
-            <tr id="rowid_{{ form.image_thresholding.help_text }}">
-                <th>Image Thresholding:</th>
-                <td>{{ form.image_thresholding }}</td>
-                <td>Image thresholding: select either a binary threshold set with the "Cleaning threshold" variable or Otsu's method.</td>
-            </tr>
-            <tr id="rowid_{{ form.cleaning_threshold.help_text }}">
-                <th>Cleaning Threshold:</th>
-                <td>{{ form.cleaning_threshold }}</td>
-                <td>Cleaning threshold: higher values will result in more pixels removed. Required if "Image thresholding" is set to binary</td>
-            </tr>
-            <tr id="rowid_">
+            <tr id="rowid_{{ form.crop.help_text }}">
                 <th>Crop:</th>
                 <td>{{ form.crop }}</td>
                 <td>Crop: crop image to predicted ultrasound cone.</td>
@@ -62,16 +47,21 @@
                 <td>C dim: if resize is selected, sets output width.</td>
             </tr>
             <tr id="rowid_">
-                <th>RGB:</th>
-                <td>{{ form.rgb }}</td>
-                <td>Maintain color images: select to output with original color scheme. Deselecting yields grayscale videos.</td>
-            </tr>
-            <tr id="rowid_">
                 <th>Pickle File:</th>
                 <td>{{ form.pickle_file }}</td>
                 <td>Pickle file: set output filename.</td>
             </tr>
             <tr><th><h3>Advanced Features:</h3></th></tr>
+            <tr id="rowid_{{ form.image_thresholding.help_text }}">
+                <th>Image Thresholding:</th>
+                <td>{{ form.image_thresholding }}</td>
+                <td>Image thresholding: select either a binary threshold set with the "Cleaning threshold" variable or Otsu's method.</td>
+            </tr>
+            <tr id="rowid_{{ form.cleaning_threshold.help_text }}">
+                <th>Cleaning Threshold:</th>
+                <td>{{ form.cleaning_threshold }}</td>
+                <td>Cleaning threshold: higher values will result in more pixels removed. Required if "Image thresholding" is set to binary</td>
+            </tr>
             <tr id="rowid_">
                 <th>Image Increment:</th>
                 <td>{{ form.image_increment }}</td>
@@ -86,8 +76,8 @@
         <input type="submit" value="Submit" />
     </form>
         <script> <!--scripts to hide extra form fields based on user entries-->
-        function pickleAnonymizeOptions(){
-            var check1 = document.getElementById("id_anonymize");
+        function pickleCropOptions(){
+            var check1 = document.getElementById("id_crop");
             var field1 = document.getElementById("rowid_image_thresholding_tr");
             var field2 = document.getElementById("rowid_cleaning_threshold_tr");
             if (check1.checked == true){
