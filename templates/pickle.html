@@ -52,15 +52,17 @@
                 <td>Pickle file: set output filename.</td>
             </tr>
             <tr><th><h3>Advanced Features:</h3></th></tr>
+            <!--
             <tr id="rowid_{{ form.image_thresholding.help_text }}">
                 <th>Image Thresholding:</th>
                 <td>{{ form.image_thresholding }}</td>
                 <td>Image thresholding: select either a binary threshold set with the "Cleaning threshold" variable or Otsu's method.</td>
             </tr>
+            -->
             <tr id="rowid_{{ form.cleaning_threshold.help_text }}">
                 <th>Cleaning Threshold:</th>
                 <td>{{ form.cleaning_threshold }}</td>
-                <td>Cleaning threshold: higher values will result in more pixels removed. Required if "Image thresholding" is set to binary</td>
+                <td>Cleaning threshold: higher values will result in more pixels removed.</td>
             </tr>
             <tr id="rowid_">
                 <th>Image Increment:</th>

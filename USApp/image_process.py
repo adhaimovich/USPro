@@ -1,14 +1,29 @@
 import numpy as np
+#import dicom
 from skimage.filters import threshold_otsu
 from skimage.measure import label, regionprops
 from skimage.morphology import closing, square
 import scipy
+import matplotlib.pyplot as plt
+from . import gdcm_utilities
 import os
 import SimpleITK
 
-def DICOMtoImages(inpt):
 
+# Convert DICOM file without compression to a numpy matrix
+def DICOMtoImages(inpt):
+    '''
+       ds = dicom.read_file(inpt)
+       img = ds.pixel_array
+       r = ds.Rows
+       c = ds.Columns
+       f = ds.NumberOfFrames
+       s = ds.SamplesPerPixel
+       imageC = np.reshape(img,(f,r,c,s), order='C')
+       return imageC
+    '''
     img = SimpleITK.ReadImage(inpt)
+    #for key in img.GetMetaDataKeys(): print ("\"{0}\":\"{1}\"".format(key, img.GetMetaData(key)))
 
     if 'YBR' in img.GetMetaData('0028|0004'):
         mat = SimpleITK.GetArrayFromImage(img)[:, :, :, 0]
@@ -39,8 +54,55 @@ def Anonymize_Mat(mat, userVars):
     print('Percent pixels modified ' + str(modified_pixels * 100 / (r * c)))
     return mat, std_dev_mat
 
+
+# Identify pixels whose summed increment-wise std dev < cleaning_threshold and wipe
+def Anonymize_Mat_3(mat, userVars): # from 1 or 3 pixel representation
+
+    threshold = userVars.get('cleaning_threshold',.0000001)
+    increment = userVars.get('image_increment', 5)
+    f = mat.shape[0]
+    r = mat.shape[1]
+    c = mat.shape[2]
+    '''
+    # If needed, convert to grayscale to enable std dev calculation
+    if len(mat.shape) == 4:
+        p = 3
+        gray_mat = Grayscale_Mat(mat)
+    elif len(mat.shape) == 3:
+        p = 1
+        gray_mat = mat
+    '''
+    std_dev_mat = np.zeros([r, c])
+
+
+
+    # Calculate std dev over increments
+    for i in range(0, f - increment, increment):
+        if p == 1: std_dev_mat = std_dev_mat + np.std(gray_mat[i:increment + i, :, :], 0)
+        elif p == 3: std_dev_mat = std_dev_mat + np.std(gray_mat[i:increment + i, :, :], 0)
+
+    # Use the std dev < threshold to delete pixels as needed
+    modified_pixels = 0
+    for rows in range(r):
+        for cols in range(c):
+            if std_dev_mat[rows, cols] < threshold:
+                modified_pixels += 1
+                if gray_mat[0,rows,cols] > 200:
+                    #print([rows,cols,gray_mat[0, rows, cols]])
+                    if p == 1: mat[:, rows, cols] = 256
+                    elif p == 3: mat[:, rows, cols, :] = 256
+                else:
+                    if p == 1: mat[:, rows, cols] = 0
+                    elif p == 3: mat[:, rows, cols, :] = 0
+    print('Pixels modified '+ str(modified_pixels))
+    print('Percent pixels modified '+ str(modified_pixels*100/(r*c)))
+    return mat, std_dev_mat
+
+# Take wiped image, identify largest region using binary/Otsu, crop to those dims
+# Method informed by: http://scikit-image.org/docs/dev/auto_examples/segmentation/plot_label.html
 def crop_to_boundaries_thresh(mat, userVars, ori_mat):
 
+    #grayscale = np.dot(mat[0,:,:,:],[0.2989, 0.5870, 0.1140])
     grayscale = mat[0, :, :]
     # apply threshold
     threshold_method = userVars.get('image_thresholding')
@@ -89,6 +151,14 @@ def Resize_Mat(mat,userVars):
 
     return outpt
 
+'''
+# Make matrix grayscale
+def Grayscale_Mat(mat):
+    outpt = np.zeros([mat.shape[0],mat.shape[1],mat.shape[2]])
+    for i in range(mat.shape[0]):
+        outpt[i,:,:] = np.dot(mat[i, :, :, :], [0.2989, 0.5870, 0.1140])
+    return outpt
+'''
 
 # Optionally identify number of "cone" pixels wiped
 def analyze_cone(std_dev_mat, coords, userVars):

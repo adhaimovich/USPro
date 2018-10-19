@@ -24,6 +24,7 @@ def process_and_save(files, label, userVars, dictionary):
 
 def to_pickle(settings):
 
+    #settings = set_vars()
     messages = []
     settings['dir'] = '/data'
     output_file = settings.get('dir') + '/' + settings.get('pickle_file')
@@ -58,3 +59,5 @@ def to_pickle(settings):
     print('Data have been saved to {}'.format(settings.get('pickle_file')))
     messages.append('Data have been saved to {}'.format(settings.get('pickle_file')))
     return messages
+
+#main()

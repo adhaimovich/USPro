@@ -8,7 +8,30 @@ import contextlib
 def delete_file(filename):
 
     with contextlib.suppress(FileNotFoundError): os.remove(filename)
+'''
+def set_vars():
+    userVars = {'cleaning_threshold': .0000001, \
+                'r_dim': 240, \
+                'c_dim': 320, \
+                'image_thresholding': 'binary', \
+                'image_increment': 10, \
+                'resize': True, \
+                'anonymize' : True, \
+                'crop': True, \
+                'preview': False, \
+                'fps': 10, \
+                'rgb': True, \
+                'labels':True,\
+                'dir': '/data',\
+                'h5_file': 'out.hdf',\
+                'compression': 'gzip',\
+                'verbose':False,\
+                'dcm_compressed':True \
+                }
 
+    return userVars
+
+'''
 def process_and_save_3(files, label, userVars):
 
     frames = []
@@ -36,6 +59,7 @@ def process_and_save_3(files, label, userVars):
             f_current = dset.shape[0]
             dset.resize((fr + f_current, r, c, 3))
             dset[f_current:, :, :] = x
+        #print(dset.shape)
 
     else:
 
@@ -49,9 +73,10 @@ def process_and_save_3(files, label, userVars):
             f_current = dset.shape[0]
             dset.resize((fr + f_current, r, c))
             dset[f_current:, :, :] = x
-
+        #print(dset.shape)
 
     dset = f.create_dataset(str(label)+'_frames', data=frames, compression=compression)
+    #return frames
 
 def process_and_save(files, label, userVars):
 
@@ -113,6 +138,12 @@ def to_hdf5(settings):
         files = glob.glob(settings.get('dir') + '/' + folder + '/*.dcm')
         process_and_save(files,i,settings)
 
+    #output_file = settings.get('dir') + '/' + settings.get('h5_file')
+    #f = h5py.File(output_file, 'a')
+    #f.create_dataset('labels', data=np.asarray(total_labels), compression=settings.get('compression'))
+    #f.create_dataset('frame_counts', data=np.asarray(total_frames), compression=settings.get('compression'))
     print('Data have been saved to {}'.format(settings.get('h5_file')))
     messages.append('Data have been saved to {}'.format(settings.get('h5_file')))
     return messages
+
+#main()

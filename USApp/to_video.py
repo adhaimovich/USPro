@@ -1,3 +1,4 @@
+import imageio
 import glob
 import os
 from . import image_process
@@ -10,9 +11,9 @@ from scipy import stats
 
 def to_video(settings):
     messages = []
-
+    #settings = set_vars()
     settings['dir'] = '/data'
-
+    #settings['resize'] = False #FIX THIS
     if settings.get('verbose'):
         for set in settings: print(set + ' : ' + str(settings.get(set)))
 
@@ -56,7 +57,21 @@ def to_video(settings):
                 outfile = out_folder + '/' + os.path.splitext(base)[0] + '.mpeg'
             mat, percent_mod_single = image_process.process_DICOM(file, settings)
             percent_mod.append(percent_mod_single)
-            
+        # with imageio
+            #for f in range(mat.shape[0]):
+            #    frame = skimage.img_as_ubyte(mat[f]/256)
+            #    mat[f] = skimage.exposure.adjust_gamma(frame, settings.get('gamma'))
+
+            #imageio.mimwrite(outfile, mat, fps=settings.get('fps'))
+
+        # with skvideo
+            #print(stats.describe(mat.flatten()))
+            #mat = mat.astype(np.uint8)
+            #print(stats.describe(mat.flatten()))
+            #skvideo.io.vwrite(outfile, mat)
+
+        # with skvideo
+
             writer = skvideo.io.FFmpegWriter(outfile)
             for i in range(mat.shape[0]):
                 out_mat = np.stack([mat,mat,mat],axis=-1)
@@ -67,4 +82,6 @@ def to_video(settings):
     print('Std')
     print(np.std(percent_mod))
     return messages
+
+#main()
 

@@ -8,6 +8,8 @@ from .forms import AVIForm
 from .forms import PickleForm
 from .forms import HDF5Form
 
+import imageio
+
 # Import functions from the check_directories.py file
 from . import check_directories
 from .check_directories import check_dirs
